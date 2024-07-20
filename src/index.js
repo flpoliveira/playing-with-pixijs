@@ -107,8 +107,12 @@ import { Enemy } from "./game/Enemy";
   addMonster();
   setInterval(gameLoop, 1000 / 60);
   setInterval(() => {
-    if (monsters.length < 100) addMonster();
-  }, 1000);
+    if (monsters.length < 1000) {
+      for (let i = 0; i < 10; i++) {
+        addMonster();
+      }
+    }
+  }, 3000);
 
   function addMonster() {
     let monster = new Enemy(Math.random() * 2 + 10, "yellow", 5);
