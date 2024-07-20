@@ -12,7 +12,9 @@ class Enemy {
 
     // Create a new Graphics object
     const graphics = new Graphics();
-    graphics.circle(radius, radius, radius);
+    this.x = Math.random() * window.innerWidth;
+    this.y = Math.random() * window.innerHeight;
+    graphics.circle(this.x, this.y, radius);
     graphics.fill(color);
 
     graphics.interactive = true;
@@ -26,9 +28,13 @@ class Enemy {
 
     this.circle.x += this.v.x;
     this.circle.y += this.v.y;
-    if (this.circle.x >= w - this.radius || this.circle.x <= 0) this.v.x *= -1;
 
-    if (this.circle.y >= h - this.radius || this.circle.y <= 0) this.v.y *= -1;
+    this.x += this.v.x;
+    this.y += this.v.y;
+
+    if (this.x >= w - this.radius || this.x <= 0) this.v.x *= -1;
+
+    if (this.y >= h - this.radius || this.y <= 0) this.v.y *= -1;
   }
 
   destroy() {

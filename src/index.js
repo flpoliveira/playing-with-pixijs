@@ -6,6 +6,7 @@ import { Enemy } from "./game/Enemy";
   let monstersKilled = 0;
 
   function gameLoop() {
+    window.document.getElementById("monstersKilled").innerText = monstersKilled;
     monsters.forEach((c) => {
       if (c.circle !== null) {
         c.update();
@@ -82,10 +83,10 @@ import { Enemy } from "./game/Enemy";
       p.x = ix;
       p.y = iy;
 
-      const radius = 3; // Fixed radius for the circle
+      const radius = 5; // Fixed radius for the circle
       const monsterHitt = monsters.filter((monster) => {
-        const dx = monster.circle.x - p.x;
-        const dy = monster.circle.y - p.y;
+        const dx = monster.x - p.x;
+        const dy = monster.y - p.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         return distance - monster.radius < radius;
@@ -95,6 +96,7 @@ import { Enemy } from "./game/Enemy";
         monster.circle.tint = 0xff0000;
         monsters = monsters.filter((x) => x.id !== monster.id);
         monstersKilled += 1;
+        console.log(monstersKilled);
         setTimeout(() => {
           monster.circle.destroy();
         }, 200);
