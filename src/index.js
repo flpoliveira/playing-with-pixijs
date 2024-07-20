@@ -1,6 +1,15 @@
 import { Application, Assets, Point, MeshRope } from "pixi.js";
+import { Enemy } from "./game/Enemy";
 
 (async () => {
+  let monsters = [];
+
+  function gameLoop() {
+    monsters.forEach((c) => {
+      c.update();
+    });
+  }
+
   // Create a new application
   const app = new Application();
 
@@ -71,6 +80,16 @@ import { Application, Assets, Point, MeshRope } from "pixi.js";
       p.y = iy;
     }
   });
+
+  addMonster();
+  setInterval(gameLoop, 1000 / 60);
+
+  function addMonster() {
+    let monster = new Enemy(Math.random() * 2 + 10, "yellow", 5);
+
+    app.stage.addChild(monster.circle);
+    monsters.push(monster);
+  }
 
   /**
    * Cubic interpolation based on https://github.com/osuushi/Smooth.js
