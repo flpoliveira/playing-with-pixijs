@@ -3,10 +3,13 @@ import { Enemy } from "./game/Enemy";
 
 (async () => {
   let monsters = [];
+  let monstersKilled = 0;
 
   function gameLoop() {
     monsters.forEach((c) => {
-      c.update();
+      if (c.circle !== null) {
+        c.update();
+      }
     });
   }
 
@@ -27,7 +30,7 @@ import { Enemy } from "./game/Enemy";
   // historySize determines how long the trail will be.
   const historySize = 20;
   // ropeSize determines how smooth the trail will be.
-  const ropeSize = 100;
+  const ropeSize = 10;
   const points = [];
 
   // Create history array.
@@ -78,17 +81,50 @@ import { Enemy } from "./game/Enemy";
 
       p.x = ix;
       p.y = iy;
+
+      const radius = 3; // Fixed radius for the circle
+      const monsterHitt = monsters.filter((monster) => {
+        const dx = monster.circle.x - p.x;
+        const dy = monster.circle.y - p.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        return distance - monster.radius < radius;
+      });
+
+      for (const monster of monsterHitt) {
+        monster.circle.tint = 0xff0000;
+        monsters = monsters.filter((x) => x.id !== monster.id);
+        monstersKilled += 1;
+        setTimeout(() => {
+          monster.circle.destroy();
+        }, 200);
+      }
     }
   });
 
   addMonster();
   setInterval(gameLoop, 1000 / 60);
+  setInterval(() => {
+    if (monsters.length < 100) addMonster();
+  }, 1000);
 
   function addMonster() {
     let monster = new Enemy(Math.random() * 2 + 10, "yellow", 5);
 
+    // Handle mouseover and mouseout events
+    monster.circle.on("mouseover", onMouseOver.bind(monster));
     app.stage.addChild(monster.circle);
     monsters.push(monster);
+  }
+
+  function onMouseOver() {
+    this.circle.tint = 0xff0000;
+    monsters = monsters.filter((monster) => monster.id !== this.id);
+    monstersKilled += 1;
+    setTimeout(() => {
+      this.circle.destroy();
+    }, 200);
+    console.log(monstersKilled);
   }
 
   /**
